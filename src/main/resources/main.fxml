@@ -26,22 +26,22 @@
             <left>
                 <VBox prefHeight="200.0" prefWidth="150.0" BorderPane.alignment="CENTER">
                     <children>
-                        <Button fx:id="newOrders" mnemonicParsing="false" prefWidth="150.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 0;" text="Новые">
+                        <Button fx:id="newOrders" mnemonicParsing="false" onAction="#openNewOrders" prefWidth="150.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 0;" text="Новые">
                             <padding>
                                 <Insets bottom="10.0" top="10.0" />
                             </padding>
                         </Button>
-                        <Button fx:id="acceptedOrders" mnemonicParsing="false" prefWidth="150.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 0;" text="Принятые">
+                        <Button fx:id="acceptedOrders" mnemonicParsing="false" onAction="#openAcceptedOrders" prefWidth="150.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 0;" text="Принятые">
                             <padding>
                                 <Insets bottom="10.0" top="10.0" />
                             </padding>
                         </Button>
-                        <Button fx:id="completedOrders" mnemonicParsing="false" prefWidth="150.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 0;" text="Завершенные">
+                        <Button fx:id="completedOrders" mnemonicParsing="false" onAction="#openCompletedOrders" prefWidth="150.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 0;" text="Завершенные">
                             <padding>
                                 <Insets bottom="10.0" top="10.0" />
                             </padding>
                         </Button>
-                  <Button fx:id="addOrder" mnemonicParsing="false" prefWidth="150.0" style="-fx-background-color: #C5DCA0; -fx-background-radius: 0;" text="Добавить">
+                  <Button fx:id="addOrder" mnemonicParsing="false" onAction="#addOrder" prefWidth="150.0" style="-fx-background-color: #C5DCA0; -fx-background-radius: 0;" text="Добавить">
                      <padding>
                         <Insets bottom="10.0" top="10.0" />
                      </padding>

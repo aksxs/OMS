@@ -4,12 +4,6 @@ import java.util.Date;
 
 public class Order {
 
-    enum OrderStatus {
-        NEW,
-        ACCEPTED,
-        COMPLETED
-    }
-
     private int id;
     private String name;
     private String address;
