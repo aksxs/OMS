@@ -19,7 +19,7 @@
             <menus>
                 <Menu mnemonicParsing="false" text="Файл">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Сохранить как" />
+                        <MenuItem fx:id="saveJsonButton" mnemonicParsing="false" onAction="#saveJson" text="Сохранить как" />
                     </items>
                 </Menu>
             </menus>

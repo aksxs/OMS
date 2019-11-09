@@ -12,20 +12,21 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class MainController  {
+public class MainController {
 
     private List<Order> allOrders = new ArrayList<>();
     private ObservableList<Order> orders = FXCollections.observableArrayList();
@@ -148,6 +149,34 @@ public class MainController  {
         popup.initModality(Modality.APPLICATION_MODAL);
         popup.showAndWait();
         refreshData();
+    }
+
+    @FXML
+    private MenuItem saveJsonButton;
+
+    @FXML
+    private void saveJson() throws Exception {
+        FileChooser fileChooser = new FileChooser();
+
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("JSON files", ".json");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        //Show save file dialog
+        File file = fileChooser.showSaveDialog(addOrder.getScene().getWindow());
+        Main.createFile(file);
+
+        File ordersJsonFile = new File(Main.ini.get("paths", "orders"));
+
+        Gson gson = GsonInstance.getGson();
+        JsonReader reader = new JsonReader(new FileReader(ordersJsonFile));
+        List<Order> ordersFromFile = gson.fromJson(reader, new TypeToken<List<Order>>() {}.getType());
+
+        String path = file.getPath();
+        String lyboi = GsonInstance.getGson().toJson(ordersFromFile);
+
+        BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path), StandardCharsets.UTF_8));
+        out.append(lyboi);
+        out.close();
     }
 
     public void refreshData () {
