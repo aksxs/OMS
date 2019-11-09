@@ -1,16 +1,1 @@
-[
-  {
-    "id": 1,
-    "name": "Ivanov",
-    "address": "Korotky, 3",
-    "date": "06.11.2019 20:00",
-    "status": "COMPLETED"
-  },
-  {
-    "id": 2,
-    "name": "Sidorov",
-    "address": "Korotky, 4",
-    "date": "08.11.2019 20:00",
-    "status": "NEW"
-  }
-]
+[{"id":1,"name":"Евгений","good":"Чизбургер","address":"Короткий, 3","date":"17.11.2019 12:00","status":"ACTIVE"},{"id":2,"name":"Константин","good":"Кока-кола","address":"Ильича, 61","date":"08.11.2019 11:00","status":"COMPLETED"}]

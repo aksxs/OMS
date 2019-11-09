@@ -1,16 +1,20 @@
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
+import domain.Goods;
 import domain.Order;
 import domain.OrderStatus;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.util.StringConverter;
 
 import java.io.File;
 import java.io.FileReader;
@@ -23,7 +27,7 @@ import java.util.stream.Collectors;
 
 public class MainController  {
 
-    private List<Order> allOrders = new ArrayList();
+    private List<Order> allOrders = new ArrayList<>();
     private ObservableList<Order> orders = FXCollections.observableArrayList();
 
     @FXML
@@ -36,13 +40,22 @@ public class MainController  {
     private TableColumn<Order, String> orderNameColumn;
 
     @FXML
+    private TableColumn<Order, String> orderGoodsColumn;
+
+    @FXML
     private TableColumn<Order, String> orderAddressColumn;
 
     @FXML
     private TableColumn<Order, Date> orderDateColumn;
 
     @FXML
+    private TableColumn<Order, OrderStatus> orderStatusColumn;
+
+    @FXML
     private TableColumn orderActionColumn;
+
+    @FXML
+    private Button allOrdersBtn;
 
     @FXML
     private Button newOrders;
@@ -51,19 +64,18 @@ public class MainController  {
     private Button completedOrders;
 
     @FXML
-    private Button acceptedOrders;
-
-    @FXML
     private Button addOrder;
 
     @FXML
     private void initialize() {
         initData();
 
-        orderIdColumn.setCellValueFactory(new PropertyValueFactory("id"));
-        orderNameColumn.setCellValueFactory(new PropertyValueFactory("name"));
-        orderAddressColumn.setCellValueFactory(new PropertyValueFactory("address"));
-        orderDateColumn.setCellValueFactory(new PropertyValueFactory("date"));
+        orderIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        orderNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        orderGoodsColumn.setCellValueFactory(new PropertyValueFactory<>("good"));
+        orderAddressColumn.setCellValueFactory(new PropertyValueFactory<>("address"));
+        orderDateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
+        orderStatusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
         tableView.setItems(orders);
     }
@@ -77,16 +89,14 @@ public class MainController  {
                 super.updateItem(date, isEmpty);
                 if (isEmpty) {
                     setText(null);
-                }
-                else {
+                } else {
                     setText(format.format(date));
                 }
             }
         });
 
         new Thread(() -> {
-
-            File file = new File(getClass().getClassLoader().getResource("orders.json").getFile().replace("%20", " "));
+            File file = new File(Main.ini.get("paths", "orders"));
 
             try {
                 Gson gson = GsonInstance.getGson();
@@ -95,31 +105,25 @@ public class MainController  {
                 allOrders.addAll(ordersFromFile);
 
                 //TODO del when configurate ini file
-                orders.addAll(ordersFromFile);
-
+                openAllOrders();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }).start();
     }
 
     @FXML
-    private void openNewOrders() {
+    private void openAllOrders() {
         orders.clear();
-        orders.addAll(
-                allOrders.stream()
-                .filter(o -> o.getStatus() == OrderStatus.NEW)
-                .collect(Collectors.toList())
-        );
+        orders.addAll(allOrders);
     }
 
     @FXML
-    private void openAcceptedOrders() {
+    private void openActiveOrders() {
         orders.clear();
         orders.addAll(
                 allOrders.stream()
-                .filter(o -> o.getStatus() == OrderStatus.ACCEPTED)
+                .filter(o -> o.getStatus() == OrderStatus.ACTIVE)
                 .collect(Collectors.toList())
         );
     }
@@ -135,8 +139,34 @@ public class MainController  {
     }
 
     @FXML
-    private void addOrder() {
+    private void addNewOrder() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("modalOrder.fxml"));
 
+        Stage popup = new Stage();
+        popup.setTitle("Новый заказ");
+        popup.setScene(new Scene(loader.load()));
+        popup.initModality(Modality.APPLICATION_MODAL);
+        popup.showAndWait();
+        refreshData();
     }
 
+    public void refreshData () {
+        new Thread(() -> {
+            File file = new File(Main.ini.get("paths", "orders"));
+
+            try {
+                Gson gson = GsonInstance.getGson();
+                JsonReader reader = new JsonReader(new FileReader(file));
+                List<Order> ordersFromFile = gson.fromJson(reader, new TypeToken<List<Order>>() {
+                }.getType());
+                allOrders.clear();
+                allOrders.addAll(ordersFromFile);
+
+                orders.clear();
+                orders.addAll(ordersFromFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
 }

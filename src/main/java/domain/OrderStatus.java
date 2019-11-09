@@ -1,7 +1,6 @@
 package domain;
 
 public enum OrderStatus {
-    NEW,
-    ACCEPTED,
+    ACTIVE,
     COMPLETED
 }

@@ -3,16 +3,17 @@ package domain;
 import java.util.Date;
 
 public class Order {
-
     private int id;
     private String name;
+    private String good;
     private String address;
     private Date date;
     private OrderStatus status;
 
-    public Order(int id, String name, String address, Date date, OrderStatus status) {
+    public Order(int id, String name, String good, String address, Date date, OrderStatus status) {
         this.id = id;
         this.name = name;
+        this.good = good;
         this.address = address;
         this.date = date;
         this.status = status;
@@ -56,5 +57,13 @@ public class Order {
 
     public void setStatus(OrderStatus status) {
         this.status = status;
+    }
+
+    public String getGood() {
+        return good;
+    }
+
+    public void setGood(String good) {
+        this.good = good;
     }
 }
