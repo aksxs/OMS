@@ -78,16 +78,38 @@ public class MainController {
     }
 
     private void initData() {
-        orderDateColumn.setCellFactory(column -> new TableCell<Order, Date>() {
+        orderDateColumn.setCellFactory(column -> new TableCell<>() {
             private SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 
             @Override
-            protected void updateItem(Date date, boolean isEmpty) {
-                super.updateItem(date, isEmpty);
-                if (isEmpty) {
+            protected void updateItem(Date date, boolean empty) {
+                super.updateItem(date, empty);
+                if (empty) {
                     setText(null);
                 } else {
                     setText(format.format(date));
+                }
+            }
+        });
+
+        orderStatusColumn.setCellFactory(column -> new TableCell<>() {
+            @Override
+            protected void updateItem(OrderStatus item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setText(null);
+                } else {
+                    switch (item) {
+                        case ACTIVE:
+                            setText("Активный");
+                            break;
+
+                        case COMPLETED:
+                            setText("Завершен");
+
+                        default:
+                            setText(item.name());
+                    }
                 }
             }
         });
@@ -101,7 +123,6 @@ public class MainController {
                 List<Order> ordersFromFile = gson.fromJson(reader, new TypeToken<List<Order>>() {}.getType());
                 allOrders.addAll(ordersFromFile);
 
-                //TODO del when configurate ini file
                 openAllOrders();
             } catch (IOException e) {
                 e.printStackTrace();
