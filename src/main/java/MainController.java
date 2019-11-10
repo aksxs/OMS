@@ -1,7 +1,6 @@
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
-import domain.Goods;
 import domain.Order;
 import domain.OrderStatus;
 import javafx.collections.FXCollections;
@@ -10,18 +9,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.StringConverter;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -152,34 +148,50 @@ public class MainController {
     }
 
     @FXML
-    private MenuItem saveJsonButton;
+    private MenuItem openFile;
 
     @FXML
-    private void saveJson() throws Exception {
+    private void openFile() throws IOException {
         FileChooser fileChooser = new FileChooser();
+        File file = fileChooser.showOpenDialog(addOrder.getScene().getWindow());
+        if (file != null) {
+            Main.ini.remove("paths", "orders");
+            Main.ini.put("paths", "orders", file);
+            Main.ini.store();
+            refreshData();
+        }
+    }
 
+    @FXML
+    private MenuItem saveAs;
+
+    @FXML
+    private void saveAs() throws Exception {
+        FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("JSON files", ".json");
         fileChooser.getExtensionFilters().add(extFilter);
 
         //Show save file dialog
         File file = fileChooser.showSaveDialog(addOrder.getScene().getWindow());
-        Main.createFile(file);
+        if (file != null) {
+            Main.createFileIfExists(file);
 
-        File ordersJsonFile = new File(Main.ini.get("paths", "orders"));
+            File ordersJsonFile = new File(Main.ini.get("paths", "orders"));
 
-        Gson gson = GsonInstance.getGson();
-        JsonReader reader = new JsonReader(new FileReader(ordersJsonFile));
-        List<Order> ordersFromFile = gson.fromJson(reader, new TypeToken<List<Order>>() {}.getType());
+            Gson gson = GsonInstance.getGson();
+            JsonReader reader = new JsonReader(new FileReader(ordersJsonFile));
+            List<Order> ordersFromFile = gson.fromJson(reader, new TypeToken<List<Order>>() {}.getType());
 
-        String path = file.getPath();
-        String lyboi = GsonInstance.getGson().toJson(ordersFromFile);
+            String path = file.getPath();
+            String lyboi = GsonInstance.getGson().toJson(ordersFromFile);
 
-        BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path), StandardCharsets.UTF_8));
-        out.append(lyboi);
-        out.close();
+            BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path), StandardCharsets.UTF_8));
+            out.append(lyboi);
+            out.close();
+        }
     }
 
-    public void refreshData () {
+    public void refreshData() {
         new Thread(() -> {
             File file = new File(Main.ini.get("paths", "orders"));
 

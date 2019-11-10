@@ -9,10 +9,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.util.Locale;
 
 public class Main extends Application {
     public static Ini ini;
+
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -24,16 +24,15 @@ public class Main extends Application {
 
     public static void main(String[] args) throws Exception {
         File ordersFile = new File("src/main/resources/orders.json");
-        createFile(ordersFile);
+        createFileIfExists(ordersFile);
 
         File configFile = new File("config.ini");
-        createFile(configFile);
+        createFileIfExists(configFile);
+
         ini = new Ini(configFile);
         if (ini.get("paths", "orders") == null) {
-            try (FileWriter fw = new FileWriter(configFile, true)) {
-                fw.write("[paths]\norders=" + ordersFile.getPath().replace("\\", "/"));
-                fw.flush();
-            }
+            ini.put("paths", "orders", ordersFile);
+            ini.store();
         }
         ini.load(configFile);
 
@@ -47,7 +46,7 @@ public class Main extends Application {
         launch(args);
     }
 
-    public static void createFile(File file) throws Exception {
+    public static void createFileIfExists(File file) throws Exception {
         if (!file.exists()) {
             if (!file.createNewFile()) {
                 throw new Exception("Нет доступа для создания файла");

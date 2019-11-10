@@ -14,7 +14,7 @@ public class OMSTest {
     @Test
     public void fileIsJson() throws Exception {
         File ordersFile = new File("src/main/resources/orders.json");
-        Main.createFile(ordersFile);
+        Main.createFileIfExists(ordersFile);
 
         try (FileReader reader = new FileReader(ordersFile);
              BufferedReader br = new BufferedReader(reader)) {

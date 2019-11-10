@@ -19,7 +19,8 @@
             <menus>
                 <Menu mnemonicParsing="false" text="Файл">
                     <items>
-                        <MenuItem fx:id="saveJsonButton" mnemonicParsing="false" onAction="#saveJson" text="Сохранить как" />
+                  <MenuItem fx:id="openFile" mnemonicParsing="false" onAction="#openFile" text="Открыть" />
+                        <MenuItem fx:id="saveAs" mnemonicParsing="false" onAction="#saveAs" text="Сохранить как..." />
                     </items>
                 </Menu>
             </menus>
