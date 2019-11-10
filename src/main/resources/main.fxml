@@ -52,17 +52,20 @@
                         <Insets />
                      </VBox.margin>
                   </Button>
-                  <BorderPane prefHeight="370.0">
+                  <BorderPane maxHeight="1.7976931348623157E308" prefHeight="5000.0">
                      <bottom>
-                        <ImageView fitHeight="150.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+                        <ImageView fitHeight="150.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="BOTTOM_LEFT">
                            <image>
                               <Image url="@images/ttc-logo.png" />
                            </image>
                            <BorderPane.margin>
-                              <Insets right="100.0" />
+                              <Insets bottom="10.0" left="10.0" />
                            </BorderPane.margin>
                         </ImageView>
                      </bottom>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
                   </BorderPane>
                     </children>
                 </VBox>

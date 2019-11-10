@@ -78,7 +78,7 @@ public class MainController {
     }
 
     private void initData() {
-        orderDateColumn.setCellFactory(column -> new TableCell<>() {
+        orderDateColumn.setCellFactory(column -> new TableCell<Order, Date>() {
             private SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 
             @Override
@@ -92,7 +92,7 @@ public class MainController {
             }
         });
 
-        orderStatusColumn.setCellFactory(column -> new TableCell<>() {
+        orderStatusColumn.setCellFactory(column -> new TableCell<Order, OrderStatus>() {
             @Override
             protected void updateItem(OrderStatus item, boolean empty) {
                 super.updateItem(item, empty);
