@@ -106,6 +106,7 @@ public class MainController {
 
                         case COMPLETED:
                             setText("Завершен");
+                            break;
 
                         default:
                             setText(item.name());
